@@ -461,6 +461,11 @@ public final class NoteManager {
 
 		List<Long> requested = new ArrayList<>(new LinkedHashSet<>(noteIds));
 		List<Note> deleted = new ArrayList<>();
+		// Ids are deduplicated, lineages are not: two ids the caller passed can be two
+		// revisions of one note, and the chunks they land in are resolved separately. A
+		// lineage is therefore tracked across the whole batch rather than per chunk, so
+		// it is deleted once and reported once however many of its revisions were named.
+		Set<Long> lineagesSeen = new LinkedHashSet<>();
 		CaseDbTransaction trans = db.beginTransaction();
 		try {
 			CaseDbConnection connection = trans.getConnection();
@@ -474,7 +479,10 @@ public final class NoteManager {
 					try (ResultSet rs = connection.executeQuery(s, "SELECT DISTINCT original_note_id FROM tsk_notes "
 							+ "WHERE note_id IN (" + toIdList(chunk) + ")")) {
 						while (rs.next()) {
-							lineageIds.add(rs.getLong(1));
+							long lineageId = rs.getLong(1);
+							if (lineagesSeen.add(lineageId)) {
+								lineageIds.add(lineageId);
+							}
 						}
 					}
 					if (lineageIds.isEmpty()) {
