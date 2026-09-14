@@ -286,28 +286,24 @@ public interface TskEvent {
 
 	/**
 	 * An event published when one or more notes are deleted.
+	 *
+	 * The notes are carried as they were immediately before the delete, rather
+	 * than as bare ids: a consumer has to know what was removed and from which
+	 * object to act on it, and after a hard delete there is nothing left to look
+	 * the id up against.
 	 */
-	public final static class NotesDeletedTskEvent extends TskObjectsEvent<Long> {
+	public final static class NotesDeletedTskEvent extends NotesTskEvent {
 
 		/**
 		 * Constructs an event published when one or more notes are deleted.
 		 *
-		 * @param noteIds The note IDs of the notes the caller asked to delete.
-		 *                A hard delete also removes the other revisions of
-		 *                those notes and their replies, which are not listed
-		 *                here.
+		 * @param notes The live revisions of the notes the caller asked to
+		 *              delete, read before they were removed. A hard delete also
+		 *              removes the other revisions of those notes and their
+		 *              replies, which are not listed here.
 		 */
-		NotesDeletedTskEvent(List<Long> noteIds) {
-			super(noteIds);
-		}
-
-		/**
-		 * Gets the note IDs of the deleted notes.
-		 *
-		 * @return The note IDs.
-		 */
-		public List<Long> getNoteIds() {
-			return getDataModelObjects();
+		NotesDeletedTskEvent(List<Note> notes) {
+			super(notes);
 		}
 
 	}

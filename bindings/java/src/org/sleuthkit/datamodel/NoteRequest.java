@@ -21,12 +21,11 @@ package org.sleuthkit.datamodel;
 import java.util.Optional;
 
 /**
- * Per-note request data for NoteManager.addNote() and NoteManager.addNotes().
+ * Per-note request data for NoteManager.addNotes().
  *
  * This carries only what a caller supplies. The derived columns -
  * data_source_obj_id, root_note_id and original_note_id - are computed by
- * NoteManager and are deliberately not settable here, so that the single-row
- * and batch write paths cannot disagree about them.
+ * NoteManager and are deliberately not settable here.
  */
 public final class NoteRequest {
 

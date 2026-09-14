@@ -18,7 +18,6 @@
  */
 package org.sleuthkit.datamodel;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -44,38 +43,29 @@ public final class Note {
 	 */
 	public enum AuthorKind {
 
-		USER(0, "User"), ///< A person
-		AI(1, "AI"), ///< A model
-		MODULE(2, "Module"); ///< Automation that is not a model, such as an ingest module
+		USER(0), ///< A person
+		AI(1), ///< A model
+		MODULE(2); ///< Automation that is not a model, such as an ingest module
 
 		private final int id;
-		private final String name;
 
-		private AuthorKind(int id, String name) {
+		private AuthorKind(int id) {
 			this.id = id;
-			this.name = name;
 		}
 
 		/**
 		 * Gets the id of this author kind, as stored in the author_kind column.
+		 * The id is a persistence detail; a consumer naming a kind uses the
+		 * constant, and one rendering it uses name().
 		 *
 		 * @return The id.
 		 */
-		public int getId() {
+		int getId() {
 			return id;
 		}
 
 		/**
-		 * Gets the name of this author kind.
-		 *
-		 * @return The name.
-		 */
-		public String getName() {
-			return name;
-		}
-
-		/**
-		 * Gets the author kind with the given id.
+		 * Gets the author kind with the given id, for reading a row back.
 		 *
 		 * @param id The id to look for.
 		 *
@@ -83,7 +73,7 @@ public final class Note {
 		 *
 		 * @throws IllegalArgumentException if the id matches no author kind.
 		 */
-		public static AuthorKind fromID(int id) {
+		static AuthorKind fromID(int id) {
 			for (AuthorKind kind : AuthorKind.values()) {
 				if (kind.id == id) {
 					return kind;
@@ -160,11 +150,13 @@ public final class Note {
 		}
 
 		/**
-		 * Gets the stable id of the principal that wrote the note.
+		 * Gets the stable id of the principal that wrote the note. A consumer
+		 * asking whether two notes share an author uses isSameAuthor() rather
+		 * than comparing ids, so that the rule lives in one place.
 		 *
 		 * @return The author id.
 		 */
-		public String getId() {
+		String getId() {
 			return id;
 		}
 
@@ -187,24 +179,23 @@ public final class Note {
 			return Optional.ofNullable(configId);
 		}
 
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (!(obj instanceof Author)) {
-				return false;
-			}
-			Author other = (Author) obj;
-			return kind == other.kind
-					&& id.equals(other.id)
-					&& displayName.equals(other.displayName)
-					&& Objects.equals(configId, other.configId);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(kind, id, displayName, configId);
+		/**
+		 * Whether this and another author name the same principal: the kind and
+		 * the id together, since the id space is per product rather than per
+		 * kind and a user id and a model id can read the same.
+		 *
+		 * The display name and the config id are deliberately not part of it. A
+		 * person can be renamed and a model can answer under a newer prompt
+		 * version, and neither makes it someone else - which is the rule
+		 * reviseNote() enforces when it decides whether a revision is the
+		 * author's own.
+		 *
+		 * @param other The author to compare against. May be null.
+		 *
+		 * @return True if both name the same principal.
+		 */
+		public boolean isSameAuthor(Author other) {
+			return other != null && kind == other.kind && id.equals(other.id);
 		}
 	}
 

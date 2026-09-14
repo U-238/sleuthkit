@@ -44,6 +44,7 @@ public final class NoteType {
 		COMMENT("Comment", "A comment written by a person"),
 		AI_ENRICHMENT("AI Enrichment", "Additional context about an item produced by a model"),
 		REMEDIATION("Remediation", "Advice on what to do about an item"),
+		SCORE_RECOMMENDATION("Score Recommendation", "An advisory opinion on how an item should be scored"),
 		AI_SUMMARY("AI Summary", "A summary of the notable items on a host or on the case");
 
 		private final String displayName;
@@ -65,20 +66,21 @@ public final class NoteType {
 		}
 
 		/**
-		 * Gets the display name of this built-in type.
+		 * Gets the display name of this built-in type, for seeding the row.
+		 * A consumer renders a type its own way rather than reading this.
 		 *
 		 * @return The display name.
 		 */
-		public String getDisplayName() {
+		String getDisplayName() {
 			return displayName;
 		}
 
 		/**
-		 * Gets the description of this built-in type.
+		 * Gets the description of this built-in type, for seeding the row.
 		 *
 		 * @return The description.
 		 */
-		public String getDescription() {
+		String getDescription() {
 			return description;
 		}
 	}
@@ -104,11 +106,12 @@ public final class NoteType {
 	}
 
 	/**
-	 * Gets the id of this type.
+	 * Gets the id of this type. The id is the join key rather than something a
+	 * consumer names a type by; that is the type name.
 	 *
 	 * @return The note type id.
 	 */
-	public long getNoteTypeId() {
+	long getNoteTypeId() {
 		return noteTypeId;
 	}
 
@@ -122,21 +125,21 @@ public final class NoteType {
 	}
 
 	/**
-	 * Gets the name to render for this type. A type can appear that nothing
-	 * renders specially, in which case this is the fallback.
+	 * Gets the name stored for this type. Carried so a reader can see what was
+	 * seeded; a consumer renders a type its own way rather than reading this.
 	 *
 	 * @return Optional with the display name, empty if there is none.
 	 */
-	public Optional<String> getDisplayName() {
+	Optional<String> getDisplayName() {
 		return Optional.ofNullable(displayName);
 	}
 
 	/**
-	 * Gets the description of this type.
+	 * Gets the description stored for this type.
 	 *
 	 * @return Optional with the description, empty if there is none.
 	 */
-	public Optional<String> getDescription() {
+	Optional<String> getDescription() {
 		return Optional.ofNullable(description);
 	}
 

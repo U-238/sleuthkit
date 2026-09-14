@@ -15709,10 +15709,10 @@ public class SleuthkitCase {
 
 		private List<Note> notesAdded = new ArrayList<>();
 		private List<Note> notesUpdated = new ArrayList<>();
+		private List<Note> notesDeleted = new ArrayList<>();
 
 		private List<Long> deletedOsAccountObjectIds = new ArrayList<>();
 		private List<Long> deletedResultObjectIds = new ArrayList<>();
-		private List<Long> deletedNoteIds = new ArrayList<>();
 		
 
     // Keep track of which threads have connections to debug deadlocks
@@ -15886,11 +15886,11 @@ public class SleuthkitCase {
 		/**
 		 * Saves notes that have been deleted as a part of this transaction.
 		 *
-		 * @param noteIds The note ids.
+		 * @param notes The notes as they were just before being deleted.
 		 */
-		void registerDeletedNotes(List<Long> noteIds) {
-			if (noteIds != null) {
-				this.deletedNoteIds.addAll(noteIds);
+		void registerDeletedNotes(List<Note> notes) {
+			if (notes != null) {
+				this.notesDeleted.addAll(notes);
 			}
 		}
 
@@ -15958,8 +15958,8 @@ public class SleuthkitCase {
 				if (!notesUpdated.isEmpty()) {
 					sleuthkitCase.fireTSKEvent(new TskEvent.NotesUpdatedTskEvent(notesUpdated));
 				}
-				if (!deletedNoteIds.isEmpty()) {
-					sleuthkitCase.fireTSKEvent(new TskEvent.NotesDeletedTskEvent(deletedNoteIds));
+				if (!notesDeleted.isEmpty()) {
+					sleuthkitCase.fireTSKEvent(new TskEvent.NotesDeletedTskEvent(notesDeleted));
 				}
 			}
 		}
