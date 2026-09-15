@@ -620,7 +620,7 @@ public class BlackboardAttribute extends AbstractAttribute {
 		 * when the result is created and stays correct when the note is revised. See
 		 * NoteManager.getCurrentRevision().
 		 */
-		public static final Type TSK_NOTE_ID = new Type(160, "TSK_NOTE_ID", bundle.getString("BlackboardAttribute.tskNoteId.text"), TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.LONG);
+		public static final Type TSK_ASSOCIATED_NOTE_ID = new Type(160, "TSK_ASSOCIATED_NOTE_ID", bundle.getString("BlackboardAttribute.tskAssociatedNoteId.text"), TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.LONG);
 
 		// NOTE: When adding a new standard BlackboardAttribute.Type, add the instance and then add to the STANDARD_TYPES list.
 		/**
@@ -777,7 +777,7 @@ public class BlackboardAttribute extends AbstractAttribute {
 				TSK_CORRELATION_TYPE,
 				TSK_CORRELATION_VALUE,
 				TSK_OTHER_CASES,
-				TSK_NOTE_ID
+				TSK_ASSOCIATED_NOTE_ID
 		));
 
 		private static final long serialVersionUID = 1L;
@@ -1555,8 +1555,8 @@ public class BlackboardAttribute extends AbstractAttribute {
 		TSK_OTHER_CASES(159, "TSK_OTHER_CASES",
 				bundle.getString("BlackboardAttribute.tskOtherCases.text"),
 				TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING),
-		TSK_NOTE_ID(160, "TSK_NOTE_ID",
-				bundle.getString("BlackboardAttribute.tskNoteId.text"),
+		TSK_ASSOCIATED_NOTE_ID(160, "TSK_ASSOCIATED_NOTE_ID",
+				bundle.getString("BlackboardAttribute.tskAssociatedNoteId.text"),
 				TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.LONG),;
 
 		private final int typeID;

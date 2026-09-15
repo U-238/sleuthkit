@@ -432,7 +432,7 @@ public final class NoteManager {
 	 *
 	 * Both modes act on the whole revision lineage of each named note, so it
 	 * does not matter whether the caller holds a revision id or the stable
-	 * original note id - the id an analysis result's TSK_NOTE_ID attribute
+	 * original note id - the id an analysis result's TSK_ASSOCIATED_NOTE_ID attribute
 	 * carries. A hard delete removes the lineage and, through the
 	 * parent_note_id cascade, the replies underneath it; it has to take the
 	 * whole lineage, since the later revisions reference the first one and

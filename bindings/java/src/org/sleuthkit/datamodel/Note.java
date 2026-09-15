@@ -28,7 +28,7 @@ import java.util.Optional;
  * Notes are append-only. Editing one does not rewrite it: a new row is inserted
  * carrying the same original note id and the previous row stops being the
  * current revision. Every revision in a lineage therefore shares one stable id,
- * which is what outside references (the TSK_NOTE_ID attribute) point at.
+ * which is what outside references (the TSK_ASSOCIATED_NOTE_ID attribute) point at.
  *
  * Instances are immutable snapshots of a row. Use NoteManager to create,
  * revise and read them.
@@ -356,7 +356,7 @@ public final class Note {
 
 	/**
 	 * Gets the stable id of this note across edits. A first version is its own
-	 * original. This is the id an analysis result's TSK_NOTE_ID attribute
+	 * original. This is the id an analysis result's TSK_ASSOCIATED_NOTE_ID attribute
 	 * points at, so the attribute stays correct when the note is revised.
 	 *
 	 * @return The original note id.
