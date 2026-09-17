@@ -480,7 +480,7 @@ public class NoteTest {
 	/**
 	 * Both delete modes work on the whole revision lineage, so a consumer
 	 * holding the stable original note id - which is what an analysis result's
-	 * TSK_NOTE_ID attribute carries - retracts the note the reader can see, not
+	 * TSK_ASSOCIATED_NOTE_ID attribute carries - retracts the note the reader can see, not
 	 * just the draft that id happens to name.
 	 */
 	@Test
@@ -630,14 +630,14 @@ public class NoteTest {
 				"{\"mitre\":[\"T1204\"]}", MODEL, null, result.getId(), null));
 		assertEquals(Long.valueOf(result.getId()), note.getAnalysisResultId().orElse(null));
 
-		result.addAttribute(new BlackboardAttribute(BlackboardAttribute.Type.TSK_NOTE_ID, MODULE_NAME, note.getOriginalNoteId()));
+		result.addAttribute(new BlackboardAttribute(BlackboardAttribute.Type.TSK_ASSOCIATED_NOTE_ID, MODULE_NAME, note.getOriginalNoteId()));
 
 		// Revising the note must not invalidate the attribute.
 		reviseNote(caseDB, note.getNoteId(), "Also seen contacting a known bad host", null,
 				new Note.Author(Note.AuthorKind.AI, MODEL.getId(), MODEL.getDisplayName(), "prompt-v2"));
 
 		AnalysisResult reread = caseDB.getBlackboard().getAnalysisResultById(result.getId());
-		BlackboardAttribute noteAttribute = reread.getAttribute(BlackboardAttribute.Type.TSK_NOTE_ID);
+		BlackboardAttribute noteAttribute = reread.getAttribute(BlackboardAttribute.Type.TSK_ASSOCIATED_NOTE_ID);
 		Optional<Note> resolved = currentRevision(caseDB, noteAttribute.getValueLong());
 		assertTrue(resolved.isPresent());
 		assertEquals("Also seen contacting a known bad host", resolved.get().getBody());
