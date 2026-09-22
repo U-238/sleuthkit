@@ -224,6 +224,91 @@ public interface TskEvent {
 	}
 
 	/**
+	 * An abstract super class for note events.
+	 */
+	abstract static class NotesTskEvent extends TskObjectsEvent<Note> {
+
+		/**
+		 * Constructs the super class part for a note event.
+		 *
+		 * @param notes The notes that are the subjects of the event.
+		 */
+		NotesTskEvent(List<Note> notes) {
+			super(notes);
+		}
+
+		/**
+		 * Gets the notes.
+		 *
+		 * @return The notes.
+		 */
+		public List<Note> getNotes() {
+			return getDataModelObjects();
+		}
+
+	}
+
+	/**
+	 * An event published when one or more notes are added. A batch of notes
+	 * written together produces one event carrying all of them, not one event
+	 * per note.
+	 */
+	public final static class NotesAddedTskEvent extends NotesTskEvent {
+
+		/**
+		 * Constructs an event published when one or more notes are added.
+		 *
+		 * @param notes The notes.
+		 */
+		NotesAddedTskEvent(List<Note> notes) {
+			super(notes);
+		}
+
+	}
+
+	/**
+	 * An event published when one or more notes are revised. The notes carried
+	 * are the new current revisions, since revising a note appends a row rather
+	 * than rewriting one.
+	 */
+	public final static class NotesUpdatedTskEvent extends NotesTskEvent {
+
+		/**
+		 * Constructs an event published when one or more notes are revised.
+		 *
+		 * @param notes The new current revisions.
+		 */
+		NotesUpdatedTskEvent(List<Note> notes) {
+			super(notes);
+		}
+
+	}
+
+	/**
+	 * An event published when one or more notes are deleted.
+	 *
+	 * The notes are carried as they were immediately before the delete, rather
+	 * than as bare ids: a consumer has to know what was removed and from which
+	 * object to act on it, and after a hard delete there is nothing left to look
+	 * the id up against.
+	 */
+	public final static class NotesDeletedTskEvent extends NotesTskEvent {
+
+		/**
+		 * Constructs an event published when one or more notes are deleted.
+		 *
+		 * @param notes The live revisions of the notes the caller asked to
+		 *              delete, read before they were removed. A hard delete also
+		 *              removes the other revisions of those notes and their
+		 *              replies, which are not listed here.
+		 */
+		NotesDeletedTskEvent(List<Note> notes) {
+			super(notes);
+		}
+
+	}
+
+	/**
 	 * An abstract super class for OS account events.
 	 */
 	abstract static class OsAccountsTskEvent extends TskObjectsEvent<OsAccount> {
